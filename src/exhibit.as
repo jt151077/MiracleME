@@ -1,4 +1,3 @@
-// ActionScript file
 import avmplus.getQualifiedClassName;
 
 import com.daveoncode.logging.LogFileTarget;
@@ -46,6 +45,9 @@ private var warmingInterval:Number;
 private var coolingInterval:Number;
 
 private var logger:ILogger;
+
+private const WARMING_TEXT:String = "Varmes flyttes fra utsiden (jord, luft eller vann) av huset til innsiden av huset. Du varierer trykket i ulike deler av varmepumpa. I en varmepumpe veksler det derfor mellom væske og gass. Fordampning krever energi og kondensering avgir energi.";
+private const COOLING_TEXT:String = "Varme flyttes fra innsiden av huset til utsiden av huset. Du varierer trykket i ulike deler av varmepumpa. I en varmepumpe veksler det derfor mellom væske og gass. Fordampning krever energi og kondensering avgir energi. Et kjøleskap er en varmepumpe.";
 
 protected function initApp(event:FlexEvent):void {
 	this.stage.displayState = StageDisplayState.FULL_SCREEN;
@@ -168,6 +170,17 @@ protected function resetApp():void {
 protected function processReadData(dat:Number):void {
 	clearInterval(resetInterval);
 	
+	if(dat < LOW_LIMIT && banner.text != COOLING_TEXT) {
+		txtAnim.stop();
+		banner.text = COOLING_TEXT;
+		initTxt();
+	}
+	else if(dat > HIGH_LIMIT && banner.text != WARMING_TEXT) {
+		txtAnim.stop();
+		banner.text = WARMING_TEXT;
+		initTxt();
+	}
+	
 	if(temperatureLevel == 500 && tempVal.text == tempTable[500] && (dat > LOW_LIMIT && dat < HIGH_LIMIT)) {
 		trace("standby mode");
 		clearInterval(warmingInterval);
@@ -242,10 +255,8 @@ protected function placeCorrectPicture():void {
 	}				
 }
 
-protected function initTxt(event:FlexEvent):void {
-	txtAnim.stop();
-	pth.valueFrom = 0;
-	pth.valueTo = (banner.textDisplay as RichEditableText).contentWidth - (banner.textDisplay as RichEditableText).width;
+protected function initTxt():void {
+	spath.valueFrom = 0;
+	spath.valueTo = (banner.textDisplay as RichEditableText).contentWidth - (banner.textDisplay as RichEditableText).width;
 	txtAnim.play([banner.textDisplay]);
-	txtAnim.pause();
 }

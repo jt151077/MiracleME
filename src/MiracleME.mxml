@@ -19,7 +19,7 @@
 		
 		<s:Animate id="txtAnim" duration="30000" repeatCount="0" repeatBehavior="loop" repeatDelay="2000" easer="{null}">
 			<s:motionPaths>
-				<s:SimpleMotionPath id="pth" property="horizontalScrollPosition" />
+				<s:SimpleMotionPath id="spath" property="horizontalScrollPosition" />
 			</s:motionPaths>
 		</s:Animate>
 	</fx:Declarations>
@@ -29,7 +29,7 @@
 		<s:State name="simulation" />
 	</s:states>
 	
-	<s:Group width="1920" height="1080" includeIn="simulation">
+	<s:Group width="1920" height="1080" includeIn="simulation" horizontalCenter="0" verticalCenter="0">
 		<s:Group left="668" top="180">
 			<s:Image id="bckImage" />
 			<s:VideoDisplay id="videoPlayer" source="{videoSource}" width="580" height="836" autoPlay="true" loop="true" durationChange="fadeIn.play()" />
@@ -41,11 +41,9 @@
 					<s:SolidColor color="#FFFFFF" />
 				</s:fill>
 			</s:Rect>
-			<s:TextInput id="banner" text="This is a very long text which needs to scroll over and over again and which needs to stop whenever someone stops cranking the physical exhibit, located not far from the miniature house."
-						 editable="false" fontSize="40"
-						 width="800" horizontalCenter="0" bottom="20" creationComplete="initTxt(event)" />
+			<s:TextInput id="banner" editable="false" fontSize="60" width="1400" horizontalCenter="0" bottom="40" borderAlpha=".1" text=" " creationComplete="{initTxt()}" />
 		</s:Group>
-		<s:VGroup horizontalAlign="center">
+		<s:VGroup horizontalAlign="center" visible="false">
 			<s:HGroup>
 				<s:Label fontSize="20" id="readVal" />
 				<s:Label fontSize="20" text="{'(max: '+maxReadVal+')'}" />
