@@ -19,7 +19,7 @@
 			
 			import org.osmf.events.TimeEvent;
 			
-			//import spark.components.RichEditableText;
+			import spark.components.RichEditableText;
 			
 			private var phid:PhidgetInterfaceKit;
 			private var lastReadData:Number;
@@ -168,13 +168,6 @@
 			protected function processReadData(dat:Number):void {
 				clearInterval(resetInterval);
 				
-				if(dat > LOW_LIMIT && dat < HIGH_LIMIT) {
-					txtAnim.pause();
-					swfHP.mv_default.visible = true;
-					swfHP.mv_red.visible = false;
-					swfHP.mv_blue.visible = false;
-				}
-				
 				if(temperatureLevel == 500 && tempVal.text == tempTable[500] && (dat > LOW_LIMIT && dat < HIGH_LIMIT)) {
 					trace("standby mode");
 					clearInterval(warmingInterval);
@@ -186,6 +179,7 @@
 				}
 				else {
 					txtAnim.resume();
+					
 					if(dat > temperatureLevel && !countingUp) {
 						trace("up temperature detected");
 						clearInterval(coolingInterval);
@@ -200,6 +194,13 @@
 						countingDown = true;
 						coolingInterval = setInterval(decreaseTemp, STEP_TIME);
 					}
+				}
+
+				if(dat > LOW_LIMIT && dat < HIGH_LIMIT) {
+					txtAnim.pause();
+					swfHP.mv_default.visible = true;
+					swfHP.mv_red.visible = false;
+					swfHP.mv_blue.visible = false;
 				}
 			}
 			
@@ -244,8 +245,8 @@
 			protected function initTxt(event:FlexEvent):void {
 				txtAnim.stop();
 				pth.valueFrom = 0;
-				//pth.valueTo = (banner.textDisplay as RichEditableText).contentWidth - (banner.textDisplay as RichEditableText).width;
-				//txtAnim.play([banner.textDisplay]);
+				pth.valueTo = (banner.textDisplay as RichEditableText).contentWidth - (banner.textDisplay as RichEditableText).width;
+				txtAnim.play([banner.textDisplay]);
 				txtAnim.pause();
 			}
 			
@@ -264,7 +265,7 @@
 		<s:Fade id="splashFadeIn" alphaFrom="0" alphaTo="1" duration="1500" />
 		<s:Fade id="splashFadeOut" alphaFrom="1" alphaTo="0" duration="1500" />
 		
-		<s:Animate id="txtAnim" duration="15000" repeatCount="0" repeatBehavior="loop" repeatDelay="500">
+		<s:Animate id="txtAnim" duration="30000" repeatCount="0" repeatBehavior="loop" repeatDelay="2000" easer="{null}">
 			<s:motionPaths>
 				<s:SimpleMotionPath id="pth" property="horizontalScrollPosition" />
 			</s:motionPaths>
@@ -289,7 +290,7 @@
 				</s:fill>
 			</s:Rect>
 			<s:TextInput id="banner" text="This is a very long text which needs to scroll over and over again and which needs to stop whenever someone stops cranking the physical exhibit, located not far from the miniature house."
-						 editable="false" fontSize="20"
+						 editable="false" fontSize="40"
 						 width="800" horizontalCenter="0" bottom="20" creationComplete="initTxt(event)" />
 		</s:Group>
 		<s:VGroup horizontalAlign="center">
