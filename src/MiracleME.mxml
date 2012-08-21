@@ -19,6 +19,8 @@
 			
 			import org.osmf.events.TimeEvent;
 			
+			//import spark.components.RichEditableText;
+			
 			private var phid:PhidgetInterfaceKit;
 			private var lastReadData:Number;
 			private var resetInterval:Number;
@@ -167,6 +169,7 @@
 				clearInterval(resetInterval);
 				
 				if(dat > LOW_LIMIT && dat < HIGH_LIMIT) {
+					txtAnim.pause();
 					swfHP.mv_default.visible = true;
 					swfHP.mv_red.visible = false;
 					swfHP.mv_blue.visible = false;
@@ -182,6 +185,7 @@
 					resetInterval = setInterval(resetApp, RESET_INTERVAL_VALUE);
 				}
 				else {
+					txtAnim.resume();
 					if(dat > temperatureLevel && !countingUp) {
 						trace("up temperature detected");
 						clearInterval(coolingInterval);
@@ -237,6 +241,14 @@
 				}				
 			}
 			
+			protected function initTxt(event:FlexEvent):void {
+				txtAnim.stop();
+				pth.valueFrom = 0;
+				//pth.valueTo = (banner.textDisplay as RichEditableText).contentWidth - (banner.textDisplay as RichEditableText).width;
+				//txtAnim.play([banner.textDisplay]);
+				txtAnim.pause();
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -251,6 +263,12 @@
 		
 		<s:Fade id="splashFadeIn" alphaFrom="0" alphaTo="1" duration="1500" />
 		<s:Fade id="splashFadeOut" alphaFrom="1" alphaTo="0" duration="1500" />
+		
+		<s:Animate id="txtAnim" duration="15000" repeatCount="0" repeatBehavior="loop" repeatDelay="500">
+			<s:motionPaths>
+				<s:SimpleMotionPath id="pth" property="horizontalScrollPosition" />
+			</s:motionPaths>
+		</s:Animate>
 	</fx:Declarations>
 	
 	<s:states>
@@ -263,6 +281,17 @@
 			<s:Image id="bckImage" />
 			<s:VideoDisplay id="videoPlayer" source="{videoSource}" width="580" height="836" autoPlay="true" loop="true" durationChange="fadeIn.play()" />
 		</s:Group>
+		<local:HP_FLEX id="swfHP"/>
+		<s:Group width="100%" height="150">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#FFFFFF" />
+				</s:fill>
+			</s:Rect>
+			<s:TextInput id="banner" text="This is a very long text which needs to scroll over and over again and which needs to stop whenever someone stops cranking the physical exhibit, located not far from the miniature house."
+						 editable="false" fontSize="20"
+						 width="800" horizontalCenter="0" bottom="20" creationComplete="initTxt(event)" />
+		</s:Group>
 		<s:VGroup horizontalAlign="center">
 			<s:HGroup>
 				<s:Label fontSize="20" id="readVal" />
@@ -271,7 +300,6 @@
 			</s:HGroup>
 			<s:Label fontSize="20" id="tempVal" />
 		</s:VGroup>
-		<local:HP_FLEX id="swfHP"/>
 	</s:Group>
 
 	<s:Group id="splashGroup" width="100%" height="100%" visible.welcome="true" visible.simulation="false" hideEffect="splashFadeOut" showEffect="splashFadeIn">
