@@ -7,6 +7,7 @@ import com.phidgets.events.PhidgetEvent;
 
 import flash.display.StageDisplayState;
 import flash.filesystem.File;
+import flash.ui.Mouse;
 import flash.utils.Dictionary;
 import flash.utils.clearInterval;
 import flash.utils.setInterval;
@@ -15,6 +16,7 @@ import mx.events.FlexEvent;
 import mx.logging.ILogger;
 import mx.logging.Log;
 import mx.logging.LogEventLevel;
+import mx.managers.CursorManager;
 
 import org.osmf.events.TimeEvent;
 
@@ -46,11 +48,11 @@ private var coolingInterval:Number;
 
 private var logger:ILogger;
 
-private const WARMING_TEXT:String = "Varmes flyttes fra utsiden (jord, luft eller vann) av huset til innsiden av huset. Du varierer trykket i ulike deler av varmepumpa. I en varmepumpe veksler det derfor mellom væske og gass. Fordampning krever energi og kondensering avgir energi.";
-private const COOLING_TEXT:String = "Varme flyttes fra innsiden av huset til utsiden av huset. Du varierer trykket i ulike deler av varmepumpa. I en varmepumpe veksler det derfor mellom væske og gass. Fordampning krever energi og kondensering avgir energi. Et kjøleskap er en varmepumpe.";
+private const WARMING_TEXT:String = "                                              Varme flyttes fra utsiden (jord, luft eller vann) av huset til innsiden av huset.                                              Du varierer trykket i ulike deler av varmepumpa.                                              I en varmepumpe veksler det derfor mellom væske og gass.                                              Fordampning krever energi og kondensering avgir energi.";
+private const COOLING_TEXT:String = "                                              Varme flyttes fra innsiden av huset til utsiden av huset.                                              Du varierer trykket i ulike deler av varmepumpa.                                              I en varmepumpe veksler det derfor mellom væske og gass.                                              Fordampning krever energi og kondensering avgir energi.                                              Et kjøleskap er en varmepumpe.";
 
 protected function initApp(event:FlexEvent):void {
-	this.stage.displayState = StageDisplayState.FULL_SCREEN;
+	this.stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 	
 	// get LogFileTarget's instance (LogFileTarget is a singleton)
 	var target:LogFileTarget = LogFileTarget.getInstance();
@@ -115,6 +117,10 @@ private function onDisconnect(evt:PhidgetEvent):void{
 
 private function onConnect(evt:PhidgetEvent):void{
 	trace("Connected");
+	this.stage.nativeWindow.activate();
+	this.stage.nativeWindow.orderToBack();
+	this.stage.nativeWindow.orderToFront();
+	Mouse.hide();
 }
 
 private function onSensorChange(evt:PhidgetDataEvent):void {
@@ -128,7 +134,6 @@ private function onSensorChange(evt:PhidgetDataEvent):void {
 		minReadVal = lastReadData;
 	}
 	
-	trace(lastReadData);
 	switch(this.currentState) {
 		case "welcome":
 			if(evt.Index == INPUT_INDEX && (lastReadData > HIGH_LIMIT || lastReadData < LOW_LIMIT)) {

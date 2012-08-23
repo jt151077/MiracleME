@@ -17,7 +17,7 @@
 		<s:Fade id="splashFadeIn" alphaFrom="0" alphaTo="1" duration="1500" />
 		<s:Fade id="splashFadeOut" alphaFrom="1" alphaTo="0" duration="1500" />
 		
-		<s:Animate id="txtAnim" duration="30000" repeatCount="0" repeatBehavior="loop" repeatDelay="2000" easer="{null}">
+		<s:Animate id="txtAnim" duration="40000" repeatCount="0" repeatBehavior="loop" repeatDelay="0" easer="{null}">
 			<s:motionPaths>
 				<s:SimpleMotionPath id="spath" property="horizontalScrollPosition" />
 			</s:motionPaths>

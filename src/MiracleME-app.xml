@@ -3,7 +3,7 @@
 	<id>no.uio.intermedia.MiracleME</id>
 	<filename>MiracleME</filename>
 	<name>MiracleME</name>
-	<versionNumber>1.0.4</versionNumber>
+	<versionNumber>1.1.2</versionNumber>
 	<initialWindow>
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
     </initialWindow>
